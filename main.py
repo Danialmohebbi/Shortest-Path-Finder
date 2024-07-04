@@ -13,7 +13,6 @@ class PriorityQueue:
         if (not self.indices.__contains__(x[0])):
             self.insert(x)
         else:
-            self.data[self.indices[x[0]]] = x
             self.upHeap(self.indices[x[0]])
         
         
@@ -140,15 +139,14 @@ def Dijkstra(graph, source):
 
 g = Graph()
 
-g.addEdge("A","B",4,True)
-g.addEdge("A","C",2,True)
+g.addEdge("A","B",7,True)
+g.addEdge("A","E",1,True)
+g.addEdge("B","E",8,True)
+g.addEdge("E","C",2,True)
+g.addEdge("C","D",6,True)
 g.addEdge("B","C",3,True)
-g.addEdge("C","B",1,True)
-g.addEdge("B","D",2,True)
-g.addEdge("B","E",3,True)
-g.addEdge("C","E",5,True)
-g.addEdge("C","D",4,True)
-g.addEdge("D","E",1,True)
+g.addEdge("E","D",7,True)
+g.addEdge("A","D",-1,True)
 g.addVertice("A")
 g.addVertice("B")
 g.addVertice("C")
