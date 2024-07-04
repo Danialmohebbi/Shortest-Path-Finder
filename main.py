@@ -10,13 +10,12 @@ class PriorityQueue:
         return len(self.data)
 
     def decrease_key(self, x):
-        if (not self.indices.__contains__(x[0])):
+        if not self.indices.__contains__(x[0]):
             self.insert(x)
         else:
+            self.data[self.indices[x[0]]] = x
             self.upHeap(self.indices[x[0]])
-        
-        
-    
+
     def insert(self, x):
         self.data.append(x)
         self.upHeap(self.count() - 1)
@@ -58,25 +57,25 @@ class PriorityQueue:
                 i = swap
             else:
                 break
-            
+
     def empty(self):
         return len(self.data) == 0
 
 
-
 class Edge:
-    def __init__(self, source,sink,weight,direction, next):
+    def __init__(self, source, sink, weight, direction, next):
         self.source = source
         self.sink = sink
         self.weight = weight
         self.direction = direction
         self.next = next
 
+
 class Graph:
     def __init__(self):
         self.m = {}
         self.vertices = set()
-        
+
     def addVertice(self, v):
         self.vertices.add(v)
         if self.m.get(v) is None:
@@ -84,73 +83,84 @@ class Graph:
 
     def addEdge(self, source, sink, weight, direction):
         if self.m.get(source) is None:
-            self.m[source] = Edge(source, sink,weight, direction,None)
+            self.m[source] = Edge(source, sink, weight, direction, None)
         else:
-            Node = Edge(source, sink,weight, direction, self.m[source])
+            Node = Edge(source, sink, weight, direction, self.m[source])
             self.m[source] = Node
-    
-    def getNeighbours(self,source):
+
+    def getNeighbours(self, source):
         sinks = []
         cur = self.m[source]
         while cur is not None:
-          sinks.append(cur.sink)
-          cur = cur.next
+            sinks.append(cur.sink)
+            cur = cur.next
         return sinks
-    
+
     def has_vertex(self, v):
         return self.m.__contains__(v)
-    
+
     def has_edge(self, v, s):
-        if (self.has_vertex(v)):
+        if self.has_vertex(v):
             cur = self.m[v]
             while cur is not None:
                 if cur.sink == s:
                     return True
         return False
-    
-    
-def Dijkstra(graph, source):
+
+
+def Dijkstra(graph, source, goal):
     state = {}
     h = {}
+    previous = {}
     minHeap = PriorityQueue()
     for v in graph.vertices:
-            state[v] = "unseen"
-            h[v] = math.inf
-    
-    
+        state[v] = "unseen"
+        h[v] = math.inf
+        previous[v] = None
+
     h[source] = 0
     state[source] = "open"
-    minHeap.insert((source,0))
+    minHeap.insert((source, 0))
     while not minHeap.empty():
         print(minHeap.data)
-        x,_ = minHeap.remove_smallest()
+        x, _ = minHeap.remove_smallest()
+        if x == goal:
+            break
         state[x] = "open"
         edge = graph.m[x]
         while edge is not None:
             w = edge.sink
-            if (state[w] != "closed"):
-                if (h[w] > h[x] + edge.weight):
+            if state[w] != "closed":
+                if h[w] > h[x] + edge.weight:
                     h[w] = h[x] + edge.weight
+                    previous[w] = x
                     state[w] = "open"
-                    minHeap.decrease_key((w,h[w]))
+                    minHeap.decrease_key((w, h[w]))
             edge = edge.next
-    
+
+    path = []
+    while goal is not None:
+        path.insert(0, goal)
+        goal = previous[goal]
+
     print(h)
+    return path
+
 
 g = Graph()
 
-g.addEdge("A","B",7,True)
-g.addEdge("A","E",1,True)
-g.addEdge("B","E",8,True)
-g.addEdge("E","C",2,True)
-g.addEdge("C","D",6,True)
-g.addEdge("B","C",3,True)
-g.addEdge("E","D",7,True)
-g.addEdge("A","D",-1,True)
+g.addEdge("A", "B", 7, True)
+g.addEdge("A", "E", 1, True)
+g.addEdge("B", "E", 8, True)
+g.addEdge("B", "C", 3, True)
+g.addEdge("E", "C", 2, True)
+g.addEdge("E", "D", 7, True)
+g.addEdge("C", "D", 6, True)
 g.addVertice("A")
 g.addVertice("B")
 g.addVertice("C")
 g.addVertice("D")
 g.addVertice("E")
 
-Dijkstra(g,"A")
+path = Dijkstra(g, "A", "C")
+print("Path:", path)
