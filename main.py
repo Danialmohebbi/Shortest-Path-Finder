@@ -124,9 +124,10 @@ def Dijkstra(graph, source, goal):
     while not minHeap.empty():
         print(minHeap.data)
         x, _ = minHeap.remove_smallest()
+        state[x] = "closed"
         if x == goal:
             break
-        state[x] = "open"
+        
         edge = graph.m[x]
         while edge is not None:
             w = edge.sink
@@ -143,7 +144,7 @@ def Dijkstra(graph, source, goal):
         path.insert(0, goal)
         goal = previous[goal]
 
-    print(h)
+    print(state)
     return path
 
 
@@ -156,11 +157,18 @@ g.addEdge("B", "C", 3, True)
 g.addEdge("E", "C", 2, True)
 g.addEdge("E", "D", 7, True)
 g.addEdge("C", "D", 6, True)
+g.addEdge("A","G",0,True)
+g.addEdge("G","H",0,True)
+g.addEdge("H","F",0,True)
+
 g.addVertice("A")
 g.addVertice("B")
 g.addVertice("C")
 g.addVertice("D")
 g.addVertice("E")
+g.addVertice("G")
+g.addVertice("H")
+g.addVertice("F")
 
-path = Dijkstra(g, "A", "C")
+path = Dijkstra(g, "A", "D")
 print("Path:", path)
