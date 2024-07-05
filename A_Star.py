@@ -15,7 +15,6 @@ class PriorityQueue:
             index = self.indices[x[0]]
             self.data[index] = x
             self.upHeap(index)
-            self.downHeap(index)
 
     def insert(self, x):
         self.data.append(x)
