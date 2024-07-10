@@ -1,6 +1,5 @@
 import math
 from typing import Optional
-import math
 class Node:
     def __init__(self, key):
         self.key = key[1]
