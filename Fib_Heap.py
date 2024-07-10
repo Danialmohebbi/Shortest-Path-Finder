@@ -220,7 +220,11 @@ class Graph:
 
 
 def h(u, v):
-    return math.sqrt((u[0] - v[0]) ** 2 + (u[1] - v[1]) ** 2)
+    return convert_to_time(math.sqrt((u[0] - v[0]) ** 2 + (u[1] - v[1]) ** 2))
+
+def convert_to_time(x):
+    km_h = 50
+    return int((x / km_h) * 60) #convert to min
 
 
 def A_Star(graph, source, goal):
