@@ -2,6 +2,10 @@ import json
 import math
 import pandas as pd
 import networkx as nx
+import GraphMaker
+graph = GraphMaker.MakeGraph()
+print(graph.nodes["U3Z1P"])
+
 class PriorityQueue:
     def __init__(self):
         self.data = []
