@@ -43,15 +43,17 @@ graph = MakeGraph()
 def convert_to_time(x):
     km_h = 4.8
     return (x / km_h) * 60 
-
+file = "edge_set.txt"
 def makeWalkEdges(G, info):
     n = len(info)
-    for v in range(n):
-        for w in range(n):
-            if v == w:
-                continue
-            time = convert_to_time(math.sqrt((info[v][2] - info[w][2]) ** 2 + (info[v][3] - info[w][3]) ** 2))
-            G.add_edge(info[v][0],info[w][0],trip_id="W1",departure_time=0,weight=time)
+    with open(file, "a") as f:
+        for v in range(n):
+            for w in range(n):
+                if v == w:
+                    continue
+                time = convert_to_time(math.sqrt((info[v][2] - info[w][2]) ** 2 + (info[v][3] - info[w][3]) ** 2))
+                G.add_edge(info[v][0],info[w][0],trip_id="W1",departure_time=0,weight=time)
+                f.write(f"{info[v][0]},{info[w][0]},trip_id=\"W1\",departure_time=0,weight={time}")
 def LoadGraph(G):
     last = None
     info = []
