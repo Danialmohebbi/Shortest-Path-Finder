@@ -36,8 +36,8 @@ def MakeGraph():
     #print(G.nodes["U3Z1P"])
     return G
 graph = MakeGraph()
-print(graph.nodes["Nádraží Holešovice"])
-print(list(graph.edges("U115Z11P",data=True)))
+# print(graph.nodes["Nádraží Holešovice"])
+# print(list(graph.edges("U115Z11P",data=True)))
 
 
 def convert_to_time(x):
@@ -48,9 +48,10 @@ def makeWalkEdges(G, info):
     n = len(info)
     for v in range(n):
         for w in range(n):
+            if v == w:
+                continue
             time = convert_to_time(math.sqrt((info[v][2] - info[w][2]) ** 2 + (info[v][3] - info[w][3]) ** 2))
-            G.add_edge(info[v][0],info[w][0],trip_id="",departure_time=0,weight=time)
-
+            G.add_edge(info[v][0],info[w][0],trip_id="W1",departure_time=0,weight=time)
 def LoadGraph(G):
     last = None
     info = []
