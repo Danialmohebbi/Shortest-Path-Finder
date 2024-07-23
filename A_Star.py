@@ -4,7 +4,7 @@ import pandas as pd
 import networkx as nx
 import GraphMaker
 graph = GraphMaker.MakeGraph()
-print(graph.nodes["U3Z1P"])
+# print(graph.nodes["U3Z1P"])
 
 class PriorityQueue:
     def __init__(self):
@@ -132,7 +132,7 @@ def h(u, v):
 
 
 def A_Star(graph, source, goal):
-    if source not in graph.vertices or goal not in graph.vertices:
+    if source not in graph.nodes or goal not in graph.nodes:
         return []
 
     state = {}
@@ -141,88 +141,104 @@ def A_Star(graph, source, goal):
     previous = {}
     minHeap = PriorityQueue()
 
-    for v in graph.vertices:
+    for v in graph.nodes:
         state[v] = "unseen"
         g[v] = math.inf
         f[v] = math.inf
         previous[v] = None
 
     g[source] = 0
-    f[source] = h(graph.vertices_cords[source], graph.vertices_cords[goal])
+    f[source] = h((graph.nodes[source]['lat'],graph.nodes[source]['lon']), (graph.nodes[goal]['lat'],graph.nodes[goal]['lon']))
     state[source] = "open"
     minHeap.insert((source, f[source], g[source]))
 
     while not minHeap.empty():
-        print(minHeap.data)
         x, _, _ = minHeap.remove_smallest()
         state[x] = "closed"
 
         if x == goal:
             break
 
-        edge = graph.m[x]
-        while edge is not None:
-            w = edge.sink
+        for edge in list(graph.edges(x,data=True)):
+            w = edge[1]
             if state[w] != "closed":
-                tenative_g = g[x] + edge.weight + edge.departure_time
+                # if w == "U361Z1P":
+                #     print("FOUND THE BITCH")
+                tenative_g = g[x] + edge[2]['weight']
                 if  tenative_g < g[w]:
                     g[w] = tenative_g
-                    f[w] = tenative_g + h(graph.vertices_cords[w], graph.vertices_cords[goal])
+                    f[w] = tenative_g + h((graph.nodes[w]['lat'],graph.nodes[w]['lon']), (graph.nodes[goal]['lat'],graph.nodes[goal]['lon']))
+                    
                     previous[w] = x
+                    print(f"{x}->{w}")
                     state[w] = "open"
+                    
                     minHeap.decrease_key((w, f[w], g[w]))
-            edge = edge.next
 
     path = []
+    print(previous[goal])
     while goal is not None:
-        path.insert(0, goal)
+        path.append(goal)
         goal = previous[goal]
+        print(goal)
 
     with open('magic.txt', 'w') as f:
         for key, value in state.items():
             f.write(f"{key}:{value}\n")
-    return path
+    new_path = []
+    for i  in range(len(path)-1,-1,-1):
+        new_path.append(path[i])
+    
+    return new_path
+        
 
-stops = pd.read_csv("pid_gtfs/stops.txt")
-stop_times = pd.read_csv('pid_gtfs/stop_times.txt', low_memory=False)
-trips = pd.read_csv('pid_gtfs/trips.txt', low_memory=False)
-routes = pd.read_csv('pid_gtfs/routes.txt', low_memory=False)
-g = Graph()
-station = {}
-for index, row in stops.iterrows():
-    g.addVertice(row['stop_id'],row['stop_lat'], row['stop_lat'])
-    station[row['stop_id']] = row['stop_name']
+# stops = pd.read_csv("pid_gtfs/stops.txt")
+# stop_times = pd.read_csv('pid_gtfs/stop_times.txt', low_memory=False)
+# trips = pd.read_csv('pid_gtfs/trips.txt', low_memory=False)
+# routes = pd.read_csv('pid_gtfs/routes.txt', low_memory=False)
+# g = nx.DiGraph()
+# g.add_node(3,lat=10, lon=10)
+# g.add_node(2,lat=10, lon=10)
+# g.add_node(1,lat=10, lon=10)
+# g.add_node(0,lat=10, lon=10)
+# g.add_edge(3,2,weight=10)
+# g.add_edge(2,1,weight=1)
+# g.add_edge(2,0,weight=-1)
+# station = {}
+# for index, row in stops.iterrows():
+#     g.addVertice(row['stop_id'],row['stop_lat'], row['stop_lat'])
+#     station[row['stop_id']] = row['stop_name']
 
-def timeToSecond(current_time):
-    list_of_time = current_time.split(':')
-    print(list_of_time)
-    time = 0
-    for i in range(len(list_of_time)):
-            num = int(list_of_time[i])
-            time += num * 60 ** (len(list_of_time) - i - 1)
-    return time
+# def timeToSecond(current_time):
+#     list_of_time = current_time.split(':')
+#     print(list_of_time)
+#     time = 0
+#     for i in range(len(list_of_time)):
+#             num = int(list_of_time[i])
+#             time += num * 60 ** (len(list_of_time) - i - 1)
+#     return time
 
 def convert_to_time(x):
     km_h = 50
     return (x / km_h) * 60 
 
-for index, row in stop_times.iterrows():
+# for index, row in stop_times.iterrows():
     
-    trip_id = row['trip_id']
-    stop_id = row['stop_id']
+#     trip_id = row['trip_id']
+#     stop_id = row['stop_id']
     
-    next_index = index + 1 # type: ignore
+#     next_index = index + 1 # type: ignore
 
-    if next_index < len(stop_times) and stop_times.iloc[next_index]['trip_id'] == trip_id:
-        next_stop_id = stop_times.iloc[next_index]['stop_id']
-        departure_time = timeToSecond(stop_times.iloc[index]['departure_time'])
-        arrival_time = timeToSecond(stop_times.iloc[next_index]['arrival_time'])
+#     if next_index < len(stop_times) and stop_times.iloc[next_index]['trip_id'] == trip_id:
+#         next_stop_id = stop_times.iloc[next_index]['stop_id']
+#         departure_time = timeToSecond(stop_times.iloc[index]['departure_time'])
+#         arrival_time = timeToSecond(stop_times.iloc[next_index]['arrival_time'])
         
-        time = (arrival_time - departure_time) / 60.0
+#         time = (arrival_time - departure_time) / 60.0
         
-        g.addEdge(stop_id, next_stop_id, time, 0, True)
+#         g.addEdge(stop_id, next_stop_id, time, 0, True)
 
-path = A_Star(g, "U536Z3P", "U361Z1P")
-for i in range(len(path)):
-    path[i] = station[path[i]]  
+path = A_Star(graph, "U536Z3P", "U361Z1P")
+# for i in range(len(path)):
+#     path[i] = station[path[i]]  
 print("Path:", path)
