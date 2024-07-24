@@ -18,12 +18,12 @@ def timeToSecond(current_time):
 # print(j_loaded["generatedAt"])
 # print(len(j_loaded["stopGroups"]))
 
-stops = pd.read_csv("pid_gtfs/stops.txt")
-stop_times = pd.read_csv('pid_gtfs/stop_times.txt', low_memory=False)
-trips = pd.read_csv('pid_gtfs/trips.txt', low_memory=False)
-routes = pd.read_csv('pid_gtfs/routes.txt', low_memory=False)
+stops = pd.read_csv("test_gtfs/stops.txt")
+stop_times = pd.read_csv('test_gtfs/stops_times.txt', low_memory=False)
+# trips = pd.read_csv('pid_gtfs/trips.txt', low_memory=False)
+# routes = pd.read_csv('pid_gtfs/routes.txt', low_memory=False)
 
-cache_file = 'graph_cache.pkl'
+cache_file = 'test_graph_cache.pkl'
 def MakeGraph():
     G = nx.DiGraph()
     try:
@@ -61,4 +61,5 @@ def LoadGraph(G):
         #print(trip_id)
         count+=1
         print(count)
-    print(G.edges["U3Z1P"])
+    #print(G.edges["U3Z1P"])
+#LoadGraph(MakeGraph())
