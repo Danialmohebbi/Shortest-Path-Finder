@@ -1,7 +1,7 @@
 stop_id,stop_name,stop_lat,stop_lon,zone_id,stop_url,location_type,parent_station,wheelchair_boarding,level_id,platform_code,asw_node_id,asw_stop_id,zone_region_type
-U3Z1P,"Břetislavka",50.123241,14.389533,"P",,0,,0,,A,3,1,1
 U115Z6P,"Nádraží Holešovice",50.108814,14.439855,"P",,0,,0,,V,115,6,1
 U115Z8P,"Nádraží Holešovice",50.108662,14.440871,"P",,0,,0,,D,115,8,1
+U115Z11P,"Nádraží Holešovice",50.110004,14.437736,"P",,0,,0,,I,115,11,1
+U115Z101P,"Nádraží Holešovice",50.109027,14.440167,"P",,0,U115S1,1,U115L1,1,115,101,1
 U100Z101P,"Vltavská",50.100229,14.438596,"P",,0,U100S1,1,U100L2,1,100,101,1
 U588Z1P,"Povltavská",50.116077,14.433817,"P",,0,,0,,A,588,1,1
-U115Z11P,"Nádraží Holešovice",50.110004,14.437736,"P",,0,,0,,I,115,11,1
