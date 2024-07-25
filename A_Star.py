@@ -3,9 +3,12 @@ import math
 import pandas as pd
 import networkx as nx
 import GraphMaker
+import matplotlib.pyplot as plt
 graph = GraphMaker.MakeGraph()
-print(graph.nodes["U3Z1P"])
-
+nx.draw_networkx(graph)
+plt.show()
+#print(graph.edges["U115Z6P"])
+exit()
 class PriorityQueue:
     def __init__(self):
         self.data = []
