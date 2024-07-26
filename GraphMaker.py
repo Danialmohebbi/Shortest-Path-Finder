@@ -1,4 +1,5 @@
 import json
+import math
 import pandas as pd
 import networkx as nx
 import pickle
@@ -35,17 +36,49 @@ def MakeGraph():
     #print(G.nodes["U3Z1P"])
     return G
 graph = MakeGraph()
+# print(graph.nodes["Nádraží Holešovice"])
+# print(list(graph.edges("U115Z11P",data=True)))
+
+
+def convert_to_time(x):
+    km_h = 4.8
+    return (x / km_h) * 60 
+file = "edge_set.txt"
+def makeWalkEdges(G, info):
+    n = len(info)
+    with open(file, "a") as f:
+        for v in range(n):
+            for w in range(n):
+                if v == w:
+                    continue
+                time = convert_to_time(math.sqrt((info[v][2] - info[w][2]) ** 2 + (info[v][3] - info[w][3]) ** 2))
+                G.add_edge(info[v][0],info[w][0],trip_id="W1",departure_time=0,weight=time)
+                f.write(f"{info[v][0]},{info[w][0]},trip_id=\"W1\",departure_time=0,weight={time}")
 def LoadGraph(G):
+    last = None
+    info = []
     for index, row in stops.iterrows():
         #print(row['stop_name'], row['stop_lat'])
         G.add_node(row['stop_id'], name=row['stop_name'], lat=row['stop_lat'], lon=row['stop_lat'])
+        
+        if last is None:
+            last = row['stop_name']
+            
+        if last == row['stop_name']:
+            info.append([row['stop_id'], row['stop_name'], row['stop_lat'], row['stop_lat']])
+        else:
+            makeWalkEdges(G,info)
+            info = []
+            last = row['stop_name']
+            info.append([row['stop_id'], row['stop_name'], row['stop_lat'], row['stop_lat']])
+            
         
     count = 0
     for index, row in stop_times.iterrows():
         
         trip_id = row['trip_id']
         stop_id = row['stop_id']
-        next_index = index + 1
+        next_index = index + 1 # type: ignore
 
         if next_index < len(stop_times) and stop_times.iloc[next_index]['trip_id'] == trip_id:
             next_stop_id = stop_times.iloc[next_index]['stop_id']
@@ -61,4 +94,4 @@ def LoadGraph(G):
         #print(trip_id)
         count+=1
         print(count)
-    print(G.edges["U3Z1P"])
+    
