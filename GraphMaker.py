@@ -50,7 +50,7 @@ def makeWalkEdges(G, info):
                     continue
                 trip_num  = "W" + str(count)
                 time = convert_to_time(math.sqrt((info[v][2] - info[w][2]) ** 2 + (info[v][3] - info[w][3]) ** 2))
-                G.add_edge(info[v][0],info[w][0],trip_id=trip_num,departure_time=0,weight=time)
+                G.add_edge(info[v][0],info[w][0],trip_id=trip_num,departure_time=[0],weight=time)
                 f.write(f"{info[v][0]},{info[w][0]},trip_id=\"{trip_num}\",departure_time=0,weight={time}\n")
                 count+=1
 def LoadGraph(G):
@@ -82,18 +82,19 @@ def LoadGraph(G):
         next_index = index + 1
 
         if next_index < len(stop_times) and stop_times.iloc[next_index]['trip_id'] == trip_id:
+            
             next_stop_id = stop_times.iloc[next_index]['stop_id']
-            departure_time = timeToSecond(stop_times.iloc[index]['departure_time'])
-            arrival_time = timeToSecond(stop_times.iloc[next_index]['arrival_time'])
             
-            
-            time = (arrival_time - departure_time) / 60.0 #this includes waiting time
-            
-            G.add_edge(stop_id, next_stop_id, trip_id=trip_id, departure_time=row['departure_time'], weight=time)
+            if G.has_edge(stop_id, next_stop_id) and G.edges[stop_id, next_stop_id]['trip_id'][0] != 'W':
+                G.edges[stop_id, next_stop_id]['departure_time'].append(row['departure_time'])
+            else:
+                departure_time = timeToSecond(stop_times.iloc[index]['departure_time'])
+                arrival_time = timeToSecond(stop_times.iloc[next_index]['arrival_time'])
+                time = (arrival_time - departure_time) / 60.0 
             with open(cache_file, 'wb') as f:
                 pickle.dump(G, f)
         #print(trip_id)
         count+=1
         print(count)
     #print(G.edges["U3Z1P"])
-LoadGraph(MakeGraph())
+#LoadGraph(MakeGraph())
