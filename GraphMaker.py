@@ -38,7 +38,7 @@ def MakeGraph():
 #graph = MakeGraph()
 def convert_to_time(x):
     km_h = 4.8
-    return (x / km_h) * 60 
+    return (x / km_h) * 3600 
 file = "edge_set.txt"
 def makeWalkEdges(G, info):
     n = len(info)
@@ -79,18 +79,19 @@ def LoadGraph(G):
         
         trip_id = row['trip_id']
         stop_id = row['stop_id']
-        next_index = index + 1
+        next_index = index + 1 # type: ignore
 
         if next_index < len(stop_times) and stop_times.iloc[next_index]['trip_id'] == trip_id:
             
             next_stop_id = stop_times.iloc[next_index]['stop_id']
-            
+            departure_time = timeToSecond(stop_times.iloc[index]['departure_time'])
             if G.has_edge(stop_id, next_stop_id) and G.edges[stop_id, next_stop_id]['trip_id'][0] != 'W':
-                G.edges[stop_id, next_stop_id]['departure_time'].append(row['departure_time'])
+                G.edges[stop_id, next_stop_id]['departure_time'].append(departure_time)
             else:
-                departure_time = timeToSecond(stop_times.iloc[index]['departure_time'])
+                
                 arrival_time = timeToSecond(stop_times.iloc[next_index]['arrival_time'])
-                time = (arrival_time - departure_time) / 60.0 
+                time = (arrival_time - departure_time) 
+                G.add_edge(stop_id, next_stop_id, trip_id=trip_id, departure_time=[departure_time], weight=time)
             with open(cache_file, 'wb') as f:
                 pickle.dump(G, f)
         #print(trip_id)
