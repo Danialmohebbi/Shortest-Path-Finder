@@ -1,3 +1,21 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:faccb087618b2db5400fde9d297e72230d6e2776af43a368a9d5328e3a952e76
-size 491
+vehicle_category_id,child_sequence,boarding_area_id
+metro_vlak,1,U897N16
+metro_vlak,2,U897N17
+metro_vlak,3,U897N18
+metro_vlak,4,U897N19
+metro_vlak,5,U897N20
+metro_vlak,1,U897N25
+metro_vlak,2,U897N24
+metro_vlak,3,U897N23
+metro_vlak,4,U897N22
+metro_vlak,5,U897N21
+metro_vlak,1,U818N14
+metro_vlak,2,U818N15
+metro_vlak,3,U818N16
+metro_vlak,4,U818N17
+metro_vlak,5,U818N18
+metro_vlak,1,U818N19
+metro_vlak,2,U818N20
+metro_vlak,3,U818N21
+metro_vlak,4,U818N22
+metro_vlak,5,U818N23
