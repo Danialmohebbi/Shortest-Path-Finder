@@ -93,6 +93,13 @@ def h(u, v):
     distance = abs(u[0] - v[0]) + abs(u[1] - v[1])
     return convert_to_time(distance)
 
+def find_neareast_dep(g,x,cur_list):
+        new_departure_time = None
+        for dep in cur_list:
+            if new_departure_time is None or new_departure_time - g[x] > dep - g[x] and dep - g[x] > 0:
+                new_departure_time = dep
+        return new_departure_time
+
 def A_Star(graph, source, goal):
     if source not in graph.nodes or goal not in graph.nodes:
         return []
@@ -129,10 +136,8 @@ def A_Star(graph, source, goal):
             if state[w] != "closed":
                 tenative_g = g[x] + edge[2]['weight']
                 edge[2]["departure_time"].sort()
-                new_departure_time = None
-                for dep in edge[2]["departure_time"]:
-                    if new_departure_time is None or new_departure_time - g[x] > dep - g[x] and dep - g[x] > 0:
-                        new_departure_time = dep
+                new_departure_time = find_neareast_dep(g,x,edge[2]["departure_time"])
+                
                 waitingTime = new_departure_time - g[x]
                 if edge[2]["trip_id"][0] == "W":
                     waitingTime = 0
