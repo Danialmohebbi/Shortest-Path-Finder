@@ -98,4 +98,4 @@ def LoadGraph(G):
         count+=1
         print(count)
     #print(G.edges["U3Z1P"])
-LoadGraph(MakeGraph())
+#LoadGraph(MakeGraph())
